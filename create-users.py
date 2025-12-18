@@ -43,9 +43,9 @@ for line in sys.stdin:
     print(add_user_cmd)
     print(set_pw_cmd)
 
-    # Actually run user creation commands
-    # os.system(add_user_cmd)
-    # os.system(set_pw_cmd)
+     Actually run user creation commands
+     os.system(add_user_cmd)
+     os.system(set_pw_cmd)
 
     # If group list exists, process groups
     if group_list != "-":
