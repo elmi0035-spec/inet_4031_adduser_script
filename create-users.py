@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-# IMPORTS
 import os
 import sys
 
@@ -19,38 +18,42 @@ for line in sys.stdin:
 
     parts = line.split(':')
 
-    # check number of fields in the line
+    # Check number of fields in line
     if len(parts) < 5:
         print("ERROR: Not enough parts in line:", line)
         continue
 
-    username = parts[0]
-    password = parts[1]
-    lastname = parts[2]
-    firstname = parts[3]
+    username   = parts[0]
+    password   = parts[1]
+    lastname   = parts[2]
+    firstname  = parts[3]
     group_list = parts[4]
 
-    # skip user if password is "-"
+    # Skip user if password is "-"
     if password == "-":
         print("SKIPPING USER:", username)
         continue
 
-    # build Linux command strings
-    add_user_cmd = "sudo adduser --disabled-password --gecos '" + firstname + " " + lastname + "' " + username
-    set_pw_cmd = "echo '" + username + ":" + password + "' | sudo chpasswd"
+    # Build Linux user creation commands
+    add_user_cmd = (
+        "sudo adduser --disabled-password --gecos "
+        f"'{firstname} {lastname}' {username}"
+    )
 
-    # Print the commands that WOULD run
+    set_pw_cmd = f"echo '{username}:{password}' | sudo chpasswd"
+
+    # Print commands that will run
     print(add_user_cmd)
     print(set_pw_cmd)
 
-     Actually run user creation commands
-     os.system(add_user_cmd)
-     os.system(set_pw_cmd)
+    # Execute commands
+    os.system(add_user_cmd)
+    os.system(set_pw_cmd)
 
-    # If group list exists, process groups
+    # Assign user to groups
     if group_list != "-":
         groups = group_list.split(',')
         for g in groups:
-            group_cmd = "sudo adduser " + username + " " + g
+            group_cmd = f"sudo adduser {username} {g}"
             print(group_cmd)
-            # os.system(group_cmd)
+            os.system(group_cmd)
